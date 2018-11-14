@@ -34,7 +34,7 @@ namespace WebApp_Test.Models.Tools
 
                 var usr = new MyUsers();
                 usr.UserName = "---";
-                usr.User_TypeX = Users_Type.Unknown;
+               
                 return usr;
 
             }

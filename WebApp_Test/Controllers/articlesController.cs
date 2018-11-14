@@ -16,15 +16,17 @@ namespace WebApp_Test.Controllers
     public class articlesController : Controller
     {
         private DB db = new DB();
-        Users_Type UserT = reg.GetUser().User_TypeX;
 
+
+        [Authorize(Roles = nameof(Users_Type.Admin) + "," + nameof(Users_Type.Articles_Viewer))]
         public ActionResult Index()
         {
 
-            if (UserT == Users_Type.Unknown) { return RedirectToAction("Login", "Account", new { ReturnUrl = Request.Url.LocalPath }); }
             return View(db.articles.ToList());
         }
 
+        [Authorize(Roles = nameof(Users_Type.Admin)+"," + nameof(Users_Type.Articles_Viewer))]
+         
         public ActionResult Details(long? id)
         {
             if (id == null)
@@ -39,14 +41,14 @@ namespace WebApp_Test.Controllers
             return View(article);
         }
 
+        [Authorize(Roles = nameof(Users_Type.Admin))]
         public ActionResult Create()
         {
-            if (UserT == Users_Type.Unknown || UserT==Users_Type.Articles_Viewer) { return RedirectToAction("Login", "Account", new { ReturnUrl = Request.Url.LocalPath }); }
-
-            return View();
+             return View();
         }
 
 
+        [Authorize(Roles = nameof(Users_Type.Admin))]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(article article)
@@ -62,6 +64,7 @@ namespace WebApp_Test.Controllers
             return View(article);
         }
 
+        [Authorize(Roles = nameof(Users_Type.Admin))]
         public ActionResult Edit(long? id)
         {
             if (id == null)
@@ -77,7 +80,7 @@ namespace WebApp_Test.Controllers
         }
 
 
-
+        [Authorize(Roles = nameof(Users_Type.Admin))]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(article article)
@@ -96,6 +99,7 @@ namespace WebApp_Test.Controllers
             return View(article);
         }
 
+        [Authorize(Roles = nameof(Users_Type.Admin))]
         public ActionResult Delete(long? id)
         {
             if (id == null)
@@ -110,6 +114,7 @@ namespace WebApp_Test.Controllers
             return View(article);
         }
 
+        [Authorize(Roles = nameof(Users_Type.Admin))]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(long id)
@@ -119,11 +124,7 @@ namespace WebApp_Test.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
-        private bool IsExist(long id)
-        {
-            return db.articles.Any(e => e.Id == id);
-        }
+        
 
 
         protected override void Dispose(bool disposing)

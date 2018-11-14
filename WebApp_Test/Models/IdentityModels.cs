@@ -11,10 +11,7 @@ namespace WebApp_Test.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class MyUsers : IdentityUser
     {
-        [Display(Name = "Users Types")]
-        public Users_Type User_TypeX { set; get; }
-
-        
+       
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<MyUsers> manager)
         {
             
@@ -38,6 +35,5 @@ namespace WebApp_Test.Models
             return new DB();
         }
 
-        public System.Data.Entity.DbSet<WebApp_Test.Models.MyUsers> MyUsers { get; set; }
     }
 }
