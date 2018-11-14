@@ -48,7 +48,7 @@ namespace WebApp_Test
             manager.UserValidator = new UserValidator<MyUsers>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                RequireUniqueEmail = false
             };
 
             // Configure validation logic for passwords
