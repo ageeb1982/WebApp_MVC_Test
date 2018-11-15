@@ -22,8 +22,12 @@ namespace WebApp_Test.Models
         }
     }
 
+    /// <summary>
+    /// كلاس الإتصال بقاعدة البينات
+    /// </summary>
     public class DB : IdentityDbContext<MyUsers>
     {
+
         public DbSet<article> articles { set; get; }
         public DB()
             : base("DefaultConnection", throwIfV1Schema: false)

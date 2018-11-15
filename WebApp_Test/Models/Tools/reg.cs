@@ -6,7 +6,9 @@ using System.Linq;
 using System.Web;
 
 namespace WebApp_Test.Models.Tools
-{
+{/// <summary>
+/// صلاحيات المستخدمين
+/// </summary>
     public enum Users_Type
     {
         Unknown=0,

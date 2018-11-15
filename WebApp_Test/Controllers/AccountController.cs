@@ -94,7 +94,12 @@ namespace WebApp_Test.Controllers
                     return View(model);
             }
         }
-
+        /// <summary>
+        /// دالة تقوم بإنشاء الوظائف والمستخدمين 
+        /// ثم تضيف وظيفة كل مستخدم على حدى
+        /// Admin & User
+        /// </summary>
+        /// <returns></returns>
         private async Task CreateRole_AND_User()
         {
 

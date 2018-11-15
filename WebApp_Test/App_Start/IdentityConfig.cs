@@ -33,13 +33,18 @@ namespace WebApp_Test
     }
 
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
+
+
+        /// <summary>
+        /// تفعيل وتجاهل بعض الخصائص في قبول اسم المستخدم وكلمة السر
+        /// </summary>
     public class ApplicationUserManager : UserManager<MyUsers>
     {
         public ApplicationUserManager(IUserStore<MyUsers> store)
             : base(store)
         {
         }
-
+        
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
             var manager = new ApplicationUserManager(new UserStore<MyUsers>(context.Get<DB>()));

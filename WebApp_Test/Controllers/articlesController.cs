@@ -17,7 +17,11 @@ namespace WebApp_Test.Controllers
     {
         private DB db = new DB();
 
-
+        /// <summary>
+        /// تظهر قائمة المواضيع وهي متاحة لكلا المستخدمين 
+        ///Admin & User
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = nameof(Users_Type.Admin) + "," + nameof(Users_Type.Articles_Viewer))]
         public ActionResult Index()
         {
@@ -25,8 +29,14 @@ namespace WebApp_Test.Controllers
             return View(db.articles.ToList());
         }
 
-        [Authorize(Roles = nameof(Users_Type.Admin)+"," + nameof(Users_Type.Articles_Viewer))]
-         
+
+        /// <summary>
+        ///تظهر تفاصيل المواضيع وهي متاحة لكلا المستخدمين
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = nameof(Users_Type.Admin) + "," + nameof(Users_Type.Articles_Viewer))]
+
         public ActionResult Details(long? id)
         {
             if (id == null)
@@ -41,10 +51,17 @@ namespace WebApp_Test.Controllers
             return View(article);
         }
 
+
+
+        /// <summary>
+        /// تنشئ موضوع جديد لكنها متاحة للمستخدم 
+        /// Admin
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = nameof(Users_Type.Admin))]
         public ActionResult Create()
         {
-             return View();
+            return View();
         }
 
 
@@ -64,6 +81,12 @@ namespace WebApp_Test.Controllers
             return View(article);
         }
 
+        /// <summary>
+        /// تعدل موضوع موجود وهي متاحة للمستخدم
+        /// Admin
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = nameof(Users_Type.Admin))]
         public ActionResult Edit(long? id)
         {
@@ -98,7 +121,12 @@ namespace WebApp_Test.Controllers
             }
             return View(article);
         }
-
+        /// <summary>
+        /// تحذف موضوع موجود وهي متاحة للمستخدم 
+        /// Admin
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = nameof(Users_Type.Admin))]
         public ActionResult Delete(long? id)
         {
@@ -124,7 +152,7 @@ namespace WebApp_Test.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        
+
 
 
         protected override void Dispose(bool disposing)
