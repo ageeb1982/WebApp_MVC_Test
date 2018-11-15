@@ -8,14 +8,21 @@ using System.Web.Mvc;
 
 namespace WebApp_Test.Models
 {
+    /// <summary>
+    /// كلاس المواضيع
+    /// </summary>
     public class article
     {
- 
+ /// <summary>
+ /// الرقم التسلسلي للموضوع
+ /// </summary>
          [HiddenInput(DisplayValue = false)]
          [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int64 Id { get; set; }
 
-
+        /// <summary>
+        /// اسم الموضوع
+        /// </summary>
 
         [Display(Name = "Article Name")]
         [RegularExpression(@"^[ (\p{L})?(\p{M})?-]*$", ErrorMessage = "Please Use letters only")]
@@ -23,6 +30,9 @@ namespace WebApp_Test.Models
         [MaxLength(125)]
         public string Name { set; get; }
 
+        /// <summary>
+        /// الموضوع كامل
+        /// </summary>
         [Display(Name = "Article body")]
         [Required(ErrorMessage = "please Input Article body ")]
         [RegularExpression(@"^[ \n\r(\p{L})?(\p{M})?-]*$", ErrorMessage = "Please Use letters only")]
@@ -30,7 +40,9 @@ namespace WebApp_Test.Models
         [DataType(DataType.MultilineText)]
         public string Body { set; get; }
 
-
+        /// <summary>
+        /// وقت إنشاء الموضوع
+        /// </summary>
         [Display(Name = "Article Time")]
 
         public DateTime AddTime { set; get; }

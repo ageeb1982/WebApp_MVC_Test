@@ -13,23 +13,33 @@ using WebApp_Test.Models.Tools;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace WebApp_Test.Controllers
-{
+{/// <summary>
+/// كونترول المستخدمين
+/// </summary>
     [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
+        /// <summary>
+        /// دالة الإنشاء
+        /// </summary>
         public AccountController()
         {
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="signInManager"></param>
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ApplicationSignInManager SignInManager
         {
             get
@@ -41,7 +51,9 @@ namespace WebApp_Test.Controllers
                 _signInManager = value;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ApplicationUserManager UserManager
         {
             get
@@ -55,7 +67,7 @@ namespace WebApp_Test.Controllers
         }
 
         //
-        // GET: /Account/Login
+        /// GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -64,7 +76,7 @@ namespace WebApp_Test.Controllers
         }
 
         //
-        // POST: /Account/Login
+        /// POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -97,7 +109,7 @@ namespace WebApp_Test.Controllers
         /// <summary>
         /// دالة تقوم بإنشاء الوظائف والمستخدمين 
         /// ثم تضيف وظيفة كل مستخدم على حدى
-        /// Admin & User
+        /// Admin and User
         /// </summary>
         /// <returns></returns>
         private async Task CreateRole_AND_User()
@@ -162,7 +174,10 @@ namespace WebApp_Test.Controllers
             #endregion
         }
 
-
+        /// <summary>
+        /// دالة تسجيل الخروج
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
@@ -173,7 +188,10 @@ namespace WebApp_Test.Controllers
 
 
 
-
+        /// <summary>
+        /// إنهاء الكنترولر
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

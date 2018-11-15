@@ -11,13 +11,26 @@ namespace WebApp_Test.Models.Tools
 /// </summary>
     public enum Users_Type
     {
-        Unknown=0,
+        /// <summary>
+        /// صلاحية عرض المواضيع فقط
+        /// </summary>
         Articles_Viewer = 1,
+        /// <summary>
+        /// صلاحية المشرف وكامل الصلاحيات
+        /// </summary>
         Admin =2
         
     }
+    /// <summary>
+    /// دالة مساعدة
+    /// </summary>
     public class reg
     {
+        /// <summary>
+        /// دالة تجلب المستخدم الحالي
+        /// </summary>
+        /// <param name="_id"></param>
+        /// <returns></returns>
         public static MyUsers GetUser(string _id = "")
         {
             if (string.IsNullOrEmpty(_id)) _id = System.Web.HttpContext.Current.User.Identity.GetUserId();

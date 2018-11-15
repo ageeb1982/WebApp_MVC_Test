@@ -13,21 +13,27 @@ using Microsoft.Owin.Security;
 using WebApp_Test.Models;
 
 namespace WebApp_Test
-{
+{/// <summary>
+/// 
+/// </summary>
     public class EmailService : IIdentityMessageService
     {
+        /// Plug in your email service here to send an email.
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
+            
             return Task.FromResult(0);
         }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class SmsService : IIdentityMessageService
     {
+        /// Plug in your SMS service here to send a text message.
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your SMS service here to send a text message.
+        
             return Task.FromResult(0);
         }
     }
@@ -39,12 +45,20 @@ namespace WebApp_Test
         /// تفعيل وتجاهل بعض الخصائص في قبول اسم المستخدم وكلمة السر
         /// </summary>
     public class ApplicationUserManager : UserManager<MyUsers>
-    {
+    {/// <summary>
+    ///
+    /// </summary>
+    /// <param name="store"></param>
         public ApplicationUserManager(IUserStore<MyUsers> store)
             : base(store)
         {
         }
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
             var manager = new ApplicationUserManager(new UserStore<MyUsers>(context.Get<DB>()));
@@ -93,19 +107,33 @@ namespace WebApp_Test
         }
     }
 
-    // Configure the application sign-in manager which is used in this application.
+    /// Configure the application sign-in manager which is used in this application.
     public class ApplicationSignInManager : SignInManager<MyUsers, string>
     {
+        /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userManager"></param>
+    /// <param name="authenticationManager"></param>
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
             : base(userManager, authenticationManager)
         {
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public override Task<ClaimsIdentity> CreateUserIdentityAsync(MyUsers user)
         {
             return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
         {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);

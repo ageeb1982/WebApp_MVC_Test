@@ -11,7 +11,9 @@ using WebApp_Test.Models.Tools;
 
 namespace WebApp_Test.Controllers
 {
-
+    /// <summary>
+    /// كلاس المواضيع
+    /// </summary>
     [Authorize]
     public class articlesController : Controller
     {
@@ -19,7 +21,7 @@ namespace WebApp_Test.Controllers
 
         /// <summary>
         /// تظهر قائمة المواضيع وهي متاحة لكلا المستخدمين 
-        ///Admin & User
+        ///Admin and User
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = nameof(Users_Type.Admin) + "," + nameof(Users_Type.Articles_Viewer))]
@@ -64,7 +66,11 @@ namespace WebApp_Test.Controllers
             return View();
         }
 
-
+        /// <summary>
+        /// حفظ الموضوع
+        /// </summary>
+        /// <param name="article"></param>
+        /// <returns></returns>
         [Authorize(Roles = nameof(Users_Type.Admin))]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -108,7 +114,11 @@ namespace WebApp_Test.Controllers
             return View(article);
         }
 
-
+        /// <summary>
+        /// حفظ تعديلات الموضوع
+        /// </summary>
+        /// <param name="article"></param>
+        /// <returns></returns>
         [Authorize(Roles = nameof(Users_Type.Admin))]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -153,6 +163,11 @@ namespace WebApp_Test.Controllers
             return View(article);
         }
 
+        /// <summary>
+        /// تأكيد حذف الموضوع
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = nameof(Users_Type.Admin))]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -165,7 +180,10 @@ namespace WebApp_Test.Controllers
         }
 
 
-
+        /// <summary>
+        /// إنهاء كنترولر المواضيع
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
