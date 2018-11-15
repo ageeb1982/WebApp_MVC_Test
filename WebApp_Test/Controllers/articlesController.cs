@@ -70,6 +70,12 @@ namespace WebApp_Test.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(article article)
         {
+
+            if(db.articles.Any(x=>x.Name.Trim()== article.Name.Trim()))
+            {
+                ModelState.AddModelError("Name", "This name has already been entered");
+            }
+
             if (ModelState.IsValid)
             {
                 article.AddTime = DateTime.Now;
@@ -109,6 +115,11 @@ namespace WebApp_Test.Controllers
         public ActionResult Edit(article article)
         {
 
+
+            if (db.articles.Any(x => x.Name.Trim() == article.Name.Trim() && x.Id!=article.Id))
+            {
+                ModelState.AddModelError("Name", "This name has already been entered");
+            }
 
             if (ModelState.IsValid)
             {

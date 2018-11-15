@@ -27,6 +27,7 @@ namespace WebApp_Test.Models
         [Required(ErrorMessage = "please Input Article body ")]
         [RegularExpression(@"^[ \n\r(\p{L})?(\p{M})?-]*$", ErrorMessage = "Please Use letters only")]
         [MaxLength(1000)]
+        [DataType(DataType.MultilineText)]
         public string Body { set; get; }
 
 
