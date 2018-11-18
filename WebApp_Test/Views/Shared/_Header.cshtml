@@ -236,14 +236,14 @@
                             @if (Request.IsAuthenticated)
                             {
                                 <img src="~/Content/adminlte/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                            <p>
-                                
-                               
+                                <p>
+
+
                                     <b>@User.Identity.Name </b> <small> - Developer </small>
-                                
-                                <small>Member since Nov. 2012</small>
-                            </p>
-                            } 
+
+                                    <small>Member since Nov. 2012</small>
+                                </p>
+                            }
                         </li>
                         <!-- Menu Body -->
                         <li class="user-body">
@@ -266,8 +266,21 @@
                                 <a href="#" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                            </div>
+                                
+                                @using Microsoft.AspNet.Identity
+                                @if (Request.IsAuthenticated)
+                                {
+                                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+
+
+                                 <a  class="btn btn-default btn-flat" href="javascript:document.getElementById('logoutForm').submit()">Sign out</a> 
+
+                                    }
+                                }
+
+</div>
                         </li>
                     </ul>
                 </li>

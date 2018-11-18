@@ -4,7 +4,47 @@
     ViewBag.Title = "List Of Articles";
 }
 
+
+   
+}
+
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>  
+
 @Html.Partial("_UpX")
+
+
+
+@*$("#srch").autocomplete(source: 'Url.Action("Srch_Name")' );
+    $("#srch").autocomplete({ source: '/Articles/Srch_Name' } );
+*@
+<script>
+    $(document).ready(function () {
+        $("#srch").autocomplete({ source: '@Url.Action("Srch_Name")' });
+    });
+
+     
+
+
+
+
+</script>
+
+
+
+
+@using (Html.BeginForm())
+{
+    <b>Search By Name</b>
+    @Html.TextBox("srch", "", new { id = "srch" })
+    <input type="submit" value="Search" />
+}
+
+
+
 <p>
     @Html.ActionLink("New Article", "Create")
 </p>
@@ -58,6 +98,10 @@
    
 @section Scripts
 {
+<link href="~/Content/AutoComplate/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/AutoComplate/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/Content/AutoComplate/jquery-ui.js"></script>
+    <script src="~/Content/AutoComplate/jquery-ui.min.js"></script>
     <script type="text/javascript">
   $(document).ready(function () {
     $('#T1').DataTable()

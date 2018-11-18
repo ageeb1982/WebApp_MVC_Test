@@ -25,11 +25,37 @@ namespace WebApp_Test.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = nameof(Users_Type.Admin) + "," + nameof(Users_Type.Articles_Viewer))]
-        public ActionResult Index()
+        public ActionResult Index(string srch)
         {
-
-            return View(db.articles.ToList());
+            var restult = db.articles.ToList();
+            if (!string.IsNullOrEmpty(srch))
+            { restult = restult.Where(x => x.Name.ToLower().Contains(srch.ToLower())).ToList(); }
+            return View(restult);
         }
+
+
+/// <summary>
+        /// للبحث عن موضوع معين بالإسم في الشاشة نفسها 
+        /// AutoComplate
+        /// </summary>
+        /// <param name="term"></param>
+        /// <returns></returns>
+        /// 
+       // [Authorize(Roles = nameof(Users_Type.Admin) + "," + nameof(Users_Type.Articles_Viewer))]
+        public JsonResult Srch_Name(string term)
+        {
+            var dd = Request;
+            var listQ = db.articles.ToList();
+
+            if(!string.IsNullOrEmpty(term))
+            {
+                listQ = listQ.Where(x => x.Name.ToLower().Contains(term.ToLower())).ToList();
+            }
+         
+            return Json(listQ.Select(x=>x.Name),JsonRequestBehavior.AllowGet);
+        }
+
+
 
 
         /// <summary>
@@ -77,7 +103,7 @@ namespace WebApp_Test.Controllers
         public ActionResult Create(article article)
         {
 
-            if(db.articles.Any(x=>x.Name.Trim()== article.Name.Trim()))
+            if (db.articles.Any(x => x.Name.Trim() == article.Name.Trim()))
             {
                 ModelState.AddModelError("Name", "This name has already been entered");
             }
@@ -126,7 +152,7 @@ namespace WebApp_Test.Controllers
         {
 
 
-            if (db.articles.Any(x => x.Name.Trim() == article.Name.Trim() && x.Id!=article.Id))
+            if (db.articles.Any(x => x.Name.Trim() == article.Name.Trim() && x.Id != article.Id))
             {
                 ModelState.AddModelError("Name", "This name has already been entered");
             }

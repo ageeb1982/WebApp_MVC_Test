@@ -196,7 +196,18 @@
                                             <a href="#" class="btn btn-default btn-flat">Profile</a>
                                         </div>
                                         <div class="pull-right">
-                                            <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                           @using Microsoft.AspNet.Identity
+                                        @if (Request.IsAuthenticated)
+                                        {
+                                            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+
+
+                                                <a class="btn btn-default btn-flat" href="javascript:document.getElementById('logoutForm').submit()">Sign out</a>
+
+                                            }
+                                        }
                                         </div>
                                     </li>
                                 </ul>
