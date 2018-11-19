@@ -5,7 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WebApp_Test.Models.Tools;
 using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
 namespace WebApp_Test.Models
 {
     /// <summary>
@@ -14,11 +14,19 @@ namespace WebApp_Test.Models
 
     public class MyUsers : IdentityUser
     {
-       /// <summary>
-       /// GenerateUserIdentityAsync
-       /// </summary>
-       /// <param name="manager"></param>
-       /// <returns></returns>
+        /// <summary>
+        /// لإضافة الصلاحية للمستخدم
+        /// </summary>
+        [NotMapped]
+        [Display(Name = "User Role")]
+       // [Required(ErrorMessage = "Please Select Role")]
+        public Users_Type user_Type { set; get; }
+
+        /// <summary>
+        /// GenerateUserIdentityAsync
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <returns></returns>
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<MyUsers> manager)
         {
             

@@ -20,7 +20,7 @@ namespace WebApp_Test.Controllers
         private DB db = new DB();
 
         /// <summary>
-        /// تظهر قائمة المواضيع وهي متاحة لكلا المستخدمين 
+        /// تظهر قائمة المواضيع وهي متاحة لكلا Users 
         ///Admin and User
         /// </summary>
         /// <returns></returns>
@@ -59,7 +59,7 @@ namespace WebApp_Test.Controllers
 
 
         /// <summary>
-        ///تظهر تفاصيل المواضيع وهي متاحة لكلا المستخدمين
+        ///تظهر تفاصيل المواضيع وهي متاحة لكلا Users
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

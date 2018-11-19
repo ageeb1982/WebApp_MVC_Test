@@ -7,7 +7,7 @@ using System.Web;
 
 namespace WebApp_Test.Models.Tools
 {/// <summary>
-/// صلاحيات المستخدمين
+/// صلاحيات Users
 /// </summary>
     public enum Users_Type
     {

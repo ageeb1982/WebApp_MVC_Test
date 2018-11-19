@@ -11,14 +11,16 @@ using Microsoft.Owin.Security;
 using WebApp_Test.Models;
 using WebApp_Test.Models.Tools;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 
 namespace WebApp_Test.Controllers
 {/// <summary>
-/// كونترول المستخدمين
+/// كونترول Users
 /// </summary>
     [Authorize]
     public class AccountController : Controller
     {
+        DB db = new DB();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         /// <summary>
@@ -106,8 +108,11 @@ namespace WebApp_Test.Controllers
                     return View(model);
             }
         }
+       
+        
+        
         /// <summary>
-        /// دالة تقوم بإنشاء الوظائف والمستخدمين 
+        /// دالة تقوم بإنشاء الوظائف وUsers 
         /// ثم تضيف وظيفة كل مستخدم على حدى
         /// Admin and User
         /// </summary>
@@ -184,6 +189,113 @@ namespace WebApp_Test.Controllers
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
+        }
+       
+        
+        /// <summary>
+        /// Register New User
+        /// </summary>
+        /// <returns></returns>
+      [Authorize(Roles=nameof(Users_Type.Admin))]
+   public ActionResult Register()
+       {
+            return View();
+        }
+        /// <summary>
+        /// Register New User (post)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        // POST: /Account/Register
+        [HttpPost]
+        [Authorize(Roles = nameof(Users_Type.Admin))]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register(RegisterViewModel model)
+        {
+
+            if(UserManager.Users.Any(m=>m.UserName.Trim().ToLower()==model.UserName.Trim().ToLower()))
+            {
+                ModelState.AddModelError("User_Name", "Duplicate User name -  The username already exists pleas try Again");
+            }
+            if (ModelState.IsValid)
+            {
+                UserManager.UserValidator = new UserValidator<MyUsers>(UserManager)
+                {
+                    AllowOnlyAlphanumericUserNames = false,
+
+                };
+                var user = new MyUsers
+                {
+                    UserName = model.UserName,
+                    Email = model.Email
+                    
+                };
+
+
+                
+
+
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+
+                    UserManager.AddToRole(user.Id, model.user_Type.ToString());
+
+
+                    return RedirectToAction("Index");
+                }
+                AddErrors(result);
+                
+
+            }
+return View(model);
+        }
+       
+
+
+        /// <summary>
+        /// edit for User
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = nameof(Users_Type.Admin))]
+        public ActionResult Edit(string id)
+        {
+            if(string.IsNullOrEmpty(id))
+            {
+                return RedirectToAction("Index");
+            }
+             var dee = db.Users.Find(id);
+            return View(dee);
+        }
+
+
+        /// <summary>
+        /// edit for user (post)
+        /// </summary>
+        /// <param name="cust"></param>
+        /// <returns></returns>
+        [Authorize(Roles = nameof(Users_Type.Admin))]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(MyUsers cust)
+        {
+            var url = Request.Url.AbsoluteUri;
+
+            if (ModelState.IsValid)
+            {
+
+                  
+                var usr = db.Users.FirstOrDefault(x => x.Id == cust.Id);
+
+                var rol = usr.Roles.ToList();
+               
+                db.Entry(usr).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Account", new { returnUrl = Request.Url.AbsoluteUri });
+            }
+            return View(cust);
         }
 
 
