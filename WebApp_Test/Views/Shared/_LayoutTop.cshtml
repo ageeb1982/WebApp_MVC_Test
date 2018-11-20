@@ -193,10 +193,13 @@
                                     <!-- Menu Footer-->
                                     <li class="user-footer">
                                         <div class="pull-left">
-                                            <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                            @if (Request.IsAuthenticated)
+                                            {
+                                                <a href="@Url.Action("Edit_Prof","Account")" class="btn btn-default btn-flat">Profile</a>
+                                            }
                                         </div>
                                         <div class="pull-right">
-                                           @using Microsoft.AspNet.Identity
+                                          
                                         @if (Request.IsAuthenticated)
                                         {
                                             using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))

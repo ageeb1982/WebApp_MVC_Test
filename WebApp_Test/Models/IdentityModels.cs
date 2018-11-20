@@ -35,6 +35,24 @@ namespace WebApp_Test.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+
+        /// <summary>
+        /// تحويل تلقائي من 
+        /// Regisger=>MyUser
+        /// </summary>
+        /// <param name="_Reg"></param>
+        public static implicit operator MyUsers(RegisterViewModel _Reg)
+        {
+            var _User = new MyUsers();
+            _User.Id = _Reg.Id;
+            _User.UserName = _Reg.UserName;
+            _User.Email = _Reg.Email;
+            return _User;
+
+
+
+        }
     }
 
     /// <summary>

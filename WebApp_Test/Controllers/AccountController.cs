@@ -12,6 +12,7 @@ using WebApp_Test.Models;
 using WebApp_Test.Models.Tools;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
+using System.Collections.Generic;
 
 namespace WebApp_Test.Controllers
 {/// <summary>
@@ -108,9 +109,9 @@ namespace WebApp_Test.Controllers
                     return View(model);
             }
         }
-       
-        
-        
+
+
+
         /// <summary>
         /// دالة تقوم بإنشاء الوظائف وUsers 
         /// ثم تضيف وظيفة كل مستخدم على حدى
@@ -149,7 +150,7 @@ namespace WebApp_Test.Controllers
             #endregion
 
             #region Add Users
-            
+
             if (!SignInManager.UserManager.Users.Any(x => x.UserName == "Admin"))
             {
                 var user = new MyUsers { UserName = "Admin", Email = "Admin@a.com" };
@@ -190,15 +191,23 @@ namespace WebApp_Test.Controllers
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
-       
-        
+        /// <summary>
+        /// Show All User
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = nameof(Users_Type.Admin))]
+        public ActionResult Index()
+        {
+
+            return View(db.Users.ToList());
+        }
         /// <summary>
         /// Register New User
         /// </summary>
         /// <returns></returns>
-      [Authorize(Roles=nameof(Users_Type.Admin))]
-   public ActionResult Register()
-       {
+        [Authorize(Roles = nameof(Users_Type.Admin))]
+        public ActionResult Register()
+        {
             return View();
         }
         /// <summary>
@@ -212,11 +221,19 @@ namespace WebApp_Test.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-
-            if(UserManager.Users.Any(m=>m.UserName.Trim().ToLower()==model.UserName.Trim().ToLower()))
+            //لكي لا يتكرر اسم المستخدم
+            if (UserManager.Users.Any(m => m.UserName.Trim().ToLower() == model.UserName.Trim().ToLower()))
             {
-                ModelState.AddModelError("User_Name", "Duplicate User name -  The username already exists pleas try Again");
+                ModelState.AddModelError("User_Name", "Duplicate User name -  The user name already exists please try Again");
             }
+
+            //لكي لا يتكرر البريد الإلكتروني
+            if (UserManager.Users.Any(x =>  x.Email.Trim().ToLower() == model.Email.Trim().ToLower()))
+            {
+                ModelState.AddModelError("Email", "Duplicate Email Address -  The Email Adress already exists please try Again");
+            }
+
+
             if (ModelState.IsValid)
             {
                 UserManager.UserValidator = new UserValidator<MyUsers>(UserManager)
@@ -228,11 +245,11 @@ namespace WebApp_Test.Controllers
                 {
                     UserName = model.UserName,
                     Email = model.Email
-                    
+
                 };
 
 
-                
+
 
 
 
@@ -246,15 +263,13 @@ namespace WebApp_Test.Controllers
                     return RedirectToAction("Index");
                 }
                 AddErrors(result);
-                
+
 
             }
-return View(model);
+            return View(model);
         }
-       
 
-
-        /// <summary>
+ /// <summary>
         /// edit for User
         /// </summary>
         /// <param name="id"></param>
@@ -262,40 +277,137 @@ return View(model);
         [Authorize(Roles = nameof(Users_Type.Admin))]
         public ActionResult Edit(string id)
         {
-            if(string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(id))
             {
                 return RedirectToAction("Index");
             }
-             var dee = db.Users.Find(id);
+            MyUsers usr = db.Users.Find(id);
+
+            Users_Type UsrType = Users_Type.Articles_Viewer;
+
+
+            if (UserManager.IsInRole(usr.Id, Users_Type.Admin.ToString()))
+            {
+                UsrType = Users_Type.Admin;
+            }
+
+            RegisterViewModel dee = usr;
+            dee.user_Type = UsrType;
             return View(dee);
+        }
+
+
+        /// <summary>
+        /// edit Profile Of User (post)
+        /// </summary>
+        /// <param name="prof"></param>
+        /// <returns></returns>
+        [Authorize()]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit_Prof(RegisterViewModel prof)
+        {
+            //لكي لا يتكرر البريد الإلكتروني
+             if (UserManager.Users.Any(x => x.Id != prof.Id && x.Email.Trim().ToLower() == prof.Email.Trim().ToLower()))
+            {
+                ModelState.AddModelError("Email","Duplicate Email Address -  The Email Adress already exists please try Again");
+            }
+
+                      
+
+            if (ModelState.IsValid)
+            {
+
+
+                var usr = db.Users.FirstOrDefault(x => x.Id == prof.Id);
+                if (usr != null)
+                {
+                    usr.Email = prof.Email;
+                    
+                     
+                    db.Entry(usr).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    var mo = await UserManager.GeneratePasswordResetTokenAsync(usr.Id);
+                    var result = await UserManager.ResetPasswordAsync(usr.Id, mo, prof.Password);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                return  RedirectToAction("Index", "Home" );
+            }
+            return View(prof);
+        }
+
+
+        /// <summary>
+        /// edit Profile for User
+        /// </summary>
+     
+        /// <returns></returns>
+        [Authorize()]
+        public ActionResult Edit_Prof()
+        {
+
+            //MyUsers usr = reg.GetUser();
+
+            string Usr_Id = User.Identity.GetUserId();
+            MyUsers dd = db.Users.FirstOrDefault(x => x.Id == Usr_Id);
+            if (dd != null)
+            {
+                RegisterViewModel user = dd;
+
+                return View(user);
+            }
+            return RedirectToAction("Home","Index");
         }
 
 
         /// <summary>
         /// edit for user (post)
         /// </summary>
-        /// <param name="cust"></param>
+        /// <param name="edit_Usr"></param>
         /// <returns></returns>
         [Authorize(Roles = nameof(Users_Type.Admin))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(MyUsers cust)
+        public async Task<ActionResult> Edit(RegisterViewModel edit_Usr)
         {
-            var url = Request.Url.AbsoluteUri;
+            //لكي لا يتكرر البريد الإلكتروني
+             if (UserManager.Users.Any(x => x.Id != edit_Usr.Id && x.Email.Trim().ToLower() == edit_Usr.Email.Trim().ToLower()))
+            {
+                ModelState.AddModelError("Email","Duplicate Email Address -  The Email Adress already exists please try Again");
+            }
+
+             //لحذف المطالبة بكلمة السر
+           ModelState["Password"].Errors.Clear();  
+                    
 
             if (ModelState.IsValid)
             {
 
-                  
-                var usr = db.Users.FirstOrDefault(x => x.Id == cust.Id);
 
-                var rol = usr.Roles.ToList();
-               
-                db.Entry(usr).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index", "Account", new { returnUrl = Request.Url.AbsoluteUri });
+                var usr = db.Users.FirstOrDefault(x => x.Id == edit_Usr.Id);
+                if (usr != null)
+                {
+                    usr.Email = edit_Usr.Email;
+
+                    var roles = UserManager.GetRoles(usr.Id).ToArray();
+                    UserManager.RemoveFromRoles(usr.Id, roles);
+
+                    if(usr.UserName=="Admin")
+                    {
+                        edit_Usr.user_Type = Users_Type.Admin;
+                    }
+
+
+                    db.Entry(usr).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    await UserManager.AddToRoleAsync(usr.Id, edit_Usr.user_Type.ToString());
+                }
+                return  RedirectToAction("Index", "Account" );
             }
-            return View(cust);
+            return View(edit_Usr);
         }
 
 

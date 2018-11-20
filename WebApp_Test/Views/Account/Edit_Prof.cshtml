@@ -1,6 +1,6 @@
 ﻿@model WebApp_Test.Models.RegisterViewModel
 @{
-    ViewBag.Title = "User Edit";
+    ViewBag.Title = "Edit Profile";
 }
 
 <h2>@ViewBag.Title.</h2>
@@ -8,7 +8,7 @@
 @Html.Partial("_UpX")
 
 
-@using (Html.BeginForm("Edit", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Edit_Prof", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.HiddenFor(model => model.Id)
     @Html.HiddenFor(model => model.UserName)
@@ -38,19 +38,25 @@
     </div>
 
 
+     
 
- 
 
     <div class="form-group">
-        @Html.LabelFor(model => model.user_Type, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-
-            @Html.DropDownListFor(model => model.user_Type, new SelectList(Enum.GetValues(typeof(WebApp_Test.Models.Tools.Users_Type))),
-    "Select Role", new { @class = "form-control btn btn-default dropdown-toggle", @style = "color:black" })
-            @Html.ValidationMessageFor(model => model.user_Type, "", new { @class = "text-danger" })
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
         </div>
     </div>
 
+    <div class="form-group">
+        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+
+        </div>
+    </div>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">

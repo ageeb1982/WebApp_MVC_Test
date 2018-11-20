@@ -36,6 +36,10 @@ namespace WebApp_Test.Models
     public class RegisterViewModel
     {
         /// <summary>
+        /// id For Edit Action
+        /// </summary>
+        public string Id { set; get; }
+        /// <summary>
         /// اسم المستخدم
         /// </summary>
         [Required]
@@ -78,6 +82,24 @@ namespace WebApp_Test.Models
         [Display(Name ="User Role")]
         [Required(ErrorMessage ="Please Select Role")]
         public Users_Type user_Type { set; get; }
+
+        /// <summary>
+        /// التحويل التلقائي من 
+        /// MyUser => RegisterViewModel
+        /// </summary>
+        /// <param name="user"></param>
+        public static implicit  operator RegisterViewModel(MyUsers user)
+        {
+            var _Reg = new RegisterViewModel();
+            _Reg.Id = user.Id;
+            _Reg.UserName = user.UserName;
+            _Reg.Email = user.Email;
+            return _Reg;
+
+
+
+        }
+
     }
      
 }
